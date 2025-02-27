@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
+
 function ProductList() {
     const [showCart, setShowCart] = useState(false); 
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
@@ -268,8 +269,25 @@ const handlePlantsClick = (e) => {
         </div>
         {!showCart? (
         <div className="product-grid">
-
-
+            {plantsArray.map(group => {
+                return (
+                    <>
+                    <h3>{group.category}</h3>
+                    <div className='product-list'>
+                        {group.plants.map(plant => {
+                            return (
+                                <div className='product-card'>
+                                    <div className='product-title'>{plant.name}</div>
+                                    <div className='product-price'>{plant.cost}</div>
+                                    <img className='product-image' src={plant.image}></img>
+                                    <button className='product-button'>{'Add To Cart'}</button>
+                                </div>
+                            )
+                        })}
+                    </div>
+                    </>
+                )
+            })};
         </div>
  ) :  (
     <CartItem onContinueShopping={handleContinueShopping}/>
