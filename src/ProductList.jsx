@@ -1,10 +1,14 @@
 import React, { useState,useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
+import { addItem } from './CartSlice';
+import { useDispatch } from 'react-redux';
 
 function ProductList() {
     const [showCart, setShowCart] = useState(false); 
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
+    const [addedToCart, setAddedToCart] = useState({});
+    const dispatch = useDispatch();
 
     const plantsArray = [
         {
@@ -233,6 +237,14 @@ function ProductList() {
     fontSize: '30px',
     textDecoration: 'none',
    }
+
+   const handleAddToCart = (plant) => {
+        dispatch(addItem(plant));
+        setAddedToCart((prevState) => ({
+            ...prevState, [plant.name]: true,
+        }));
+   }
+
    const handleCartClick = (e) => {
     e.preventDefault();
     setShowCart(true); // Set showCart to true when cart icon is clicked
@@ -275,12 +287,15 @@ const handlePlantsClick = (e) => {
                     <h3>{group.category}</h3>
                     <div className='product-list'>
                         {group.plants.map(plant => {
+                            const isInCart = addedToCart[plant.name];
+                            
                             return (
                                 <div className='product-card'>
                                     <div className='product-title'>{plant.name}</div>
                                     <div className='product-price'>{plant.cost}</div>
                                     <img className='product-image' src={plant.image}></img>
-                                    <button className='product-button'>{'Add To Cart'}</button>
+                                    <p className='product-description'>{plant.description}</p>
+                                    <button className={!isInCart ? 'product-button' : 'product-button added-to-cart'} onClick={isInCart ? () => {} : () => handleAddToCart(plant)}>{isInCart ? 'Added To Cart' : 'Add To Cart'}</button>
                                 </div>
                             )
                         })}
